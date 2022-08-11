@@ -1,0 +1,266 @@
+type Comments {
+  created_at: DateTime
+  id: ID!
+  post_id: String
+  posts: Posts
+    @materializer(
+      query: "getPosts"
+      arguments: [
+        { name: "id", field: "post_id" }
+        { name: "id", field: "post_id" }
+        { name: "id", field: "post_id" }
+      ]
+    )
+  text: String
+  user_id: String
+}
+
+type Posts {
+  commentsList: [Comments] @materializer(query: "getCommentsUsingPost_id")
+  created_at: DateTime
+  description: String
+  id: ID!
+  image: String
+  subreddit_id: String
+  subreddits: Subreddits
+    @materializer(
+      query: "getSubreddits"
+      arguments: [
+        { name: "id", field: "subreddit_id" }
+      ]
+    )
+  title: String
+  user_id: String
+  votesList: [Votes] @materializer(query: "getVotesUsingPost_id")
+}
+
+type Subreddits {
+  created_at: DateTime
+  id: ID!
+  postsList: [Posts] @materializer(query: "getPostsUsingSubreddit_id")
+  topic: String
+}
+
+type Votes {
+  created_at: DateTime
+  id: ID!
+  post_id: String
+  posts: Posts
+    @materializer(
+      query: "getPosts"
+      arguments: [
+        { name: "id", field: "post_id" }
+        { name: "id", field: "post_id" }
+        { name: "id", field: "post_id" }
+      ]
+    )
+  upvote: Boolean
+  username: String
+}
+
+"""
+These are some examples of queries generated from the schema. Feel free to modify them or add your own.
+"""
+type Query {
+  getCommentsList: [Comments]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      configuration: "postgresql_config"
+    )
+  getComments(id: ID!): Comments
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      configuration: "postgresql_config"
+    )
+  getPostsList: [Posts]
+    @dbquery(
+      type: "postgresql"
+      query: """
+        SELECT * FROM "posts" order by "posts"."created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
+  getPosts(id: ID!): Posts
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "posts"
+      configuration: "postgresql_config"
+    )
+  getPostsListByTopic(topic: String!): [Posts]
+    @dbquery(
+      type: "postgresql"
+      query: """
+        SELECT *, "posts".id as id from "posts" join "subreddits" on "subreddits"."id" = "posts"."subreddit_id"
+        WHERE "subreddits"."topic" = $1
+        ORDER BY "posts"."created_at" DESC
+      """
+      configuration: "postgresql_config"
+    )
+  
+  getPostsByPostId(post_id: ID!): Posts
+   @dbquery(
+    type: "postgresql"
+    query: """
+    SELECT * FROM "posts" WHERE "post_id" = $1
+    """
+    configuration: "postgresql_config"
+   )
+  getCommentsUsingPost_id(id: ID!): [Comments]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      SELECT T."created_at", T."id", T."post_id", T."text", T."user_id"
+        FROM "public"."comments" T
+        WHERE T."post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getVotesUsingPost_id(id: ID!): [Votes]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      SELECT T."created_at", T."id", T."post_id", T."upvote", T."username"
+        FROM "public"."votes" T
+        WHERE T."post_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getSubredditsList: [Subreddits]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "subreddits"
+      configuration: "postgresql_config"
+    )
+  getSubredditsListByTopic(topic: String!): [Subreddits]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "subreddits"
+      query: """
+      SELECT * FROM "subreddits" WHERE "topic" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getSubreddits(id: ID!): Subreddits
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "subreddits"
+      configuration: "postgresql_config"
+    )
+  getPostsUsingSubreddit_id(id: ID!): [Posts]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      SELECT T."created_at", T."description", T."id", T."image", T."subreddit_id", T."title", T."user_id"
+        FROM "public"."posts" T
+        WHERE T."subreddit_id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  getVotesList: [Votes]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      configuration: "postgresql_config"
+    )
+  getVotes(id: ID!): Votes
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+These are some examples of mutations generated from the schema. Feel free to modify them or add your own.
+"""
+type Mutation {
+  insertComments(
+    post_id: ID!
+    text: String!
+    user_id: String!
+  ): Comments
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteComments(id: ID!): Comments
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "comments"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertPosts(
+    image: String
+    user_id: String!
+    description: String
+    title: String!
+    subreddit_id: String
+  ): Posts
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "posts"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deletePosts(id: ID!): Posts
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "posts"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertSubreddits(topic: String): Subreddits
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "subreddits"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteSubreddits(id: ID!): Subreddits
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "subreddits"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertVotes(
+    post_id: ID!
+    created_at: DateTime
+    upvote: Boolean!
+    username: String!
+  ): Votes
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteVotes(id: ID!): Votes
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "votes"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+}
