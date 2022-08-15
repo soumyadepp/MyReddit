@@ -116,7 +116,7 @@ type Query {
       query: """
       SELECT T."created_at", T."id", T."post_id", T."text", T."user_id"
         FROM "public"."comments" T
-        WHERE T."post_id" = $1
+        WHERE T."post_id" = $1 order by T."created_at" desc
       """
       configuration: "postgresql_config"
     )
@@ -126,7 +126,7 @@ type Query {
       query: """
       SELECT T."created_at", T."id", T."post_id", T."upvote", T."username"
         FROM "public"."votes" T
-        WHERE T."post_id" = $1
+        WHERE T."post_id" = $1 order by T."created_at" desc
       """
       configuration: "postgresql_config"
     )
@@ -244,7 +244,6 @@ type Mutation {
     )
   insertVotes(
     post_id: ID!
-    created_at: DateTime
     upvote: Boolean!
     username: String!
   ): Votes

@@ -72,6 +72,7 @@ export const GET_POSTS_BY_POST_ID = gql`
             id
             description
             created_at
+            user_id
             commentsList{
                 created_at
                 id
@@ -114,6 +115,18 @@ export const GET_COMMENTS_LIST_BY_ID = gql`
             post_id
             user_id
             created_at
+        }
+    }
+`;
+
+export const GET_VOTES_BY_POST_ID = gql`
+    query MyQuery($post_id: ID!){
+        getVotesUsingPost_id(id: $post_id){
+            created_at
+            id
+            post_id
+            username
+            upvote
         }
     }
 `;
