@@ -38,7 +38,10 @@ function Header() {
             <div className='ml-5 flex items-center lg:hidden'>
                 <MenuIcon className='icon' />
             </div>
-            <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-2 cursor-pointer' onClick={!session ? signIn : signOut}>
+            <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-2 cursor-pointer' onClick={() => {
+                if(session) signOut();
+                else signIn();
+            }}>
                 {session ? 
                 <div className="flex text-xs"><p className="truncate font-semibold">{session?.user?.name}</p>
                 <hr className='ml-2'/><p className='text-gray-400 text-xs border-l-2 border-gray-200 pl-2'>1 Karma</p></div> : <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-0 cursor-pointer' onClick={signIn}>
