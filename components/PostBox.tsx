@@ -40,7 +40,6 @@ function PostBox({ subreddit }: PostBoxProps) {
       });
       const subredditExists = getSubredditsListByTopic.length > 0;
       if (!subredditExists) {
-        console.log('New subreddit');
         const { data: { insertSubreddits: newSubreddit }, } = await addSubreddit({
           variables: {
             topic: formData.subreddit,
@@ -56,8 +55,6 @@ function PostBox({ subreddit }: PostBoxProps) {
             user_id: session?.user?.name,
           }
         })
-        console.log('New post added');
-        console.log(newPost);
       }
       else {
         const image = formData.image || '';
@@ -71,8 +68,6 @@ function PostBox({ subreddit }: PostBoxProps) {
             created_at: new Date(),
           }
         });
-        console.log('New post added');
-        console.log(newPost);
       }
       setValue('title', '');
       setValue('description', '');

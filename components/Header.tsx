@@ -38,13 +38,10 @@ function Header() {
             <div className='ml-5 flex items-center lg:hidden'>
                 <MenuIcon className='icon' />
             </div>
-            <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-2 cursor-pointer' onClick={() => {
-                if(session) signOut();
-                else signIn();
-            }}>
+            <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-2 cursor-pointer' onClick={() => !session ? signIn() : signOut()}>
                 {session ? 
                 <div className="flex text-xs"><p className="truncate font-semibold">{session?.user?.name}</p>
-                <hr className='ml-2'/><p className='text-gray-400 text-xs border-l-2 border-gray-200 pl-2'>1 Karma</p></div> : <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-0 cursor-pointer' onClick={signIn}>
+                <hr className='ml-2'/><p className='text-gray-400 text-xs border-l-2 border-gray-200 pl-2'>1 Karma</p></div> : <div className='hidden lg:flex items-center space-x-2 border border-gray-100 p-0 cursor-pointer'>
                     <div className='relative h-5 w-5 flex-shrink-0'>
                         <Image src="https://links.papareact.com/23l" layout='fill' objectFit='contain' alt="" />
                     </div>

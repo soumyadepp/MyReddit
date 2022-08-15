@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-    uri: "http://localhost:5001/api/rafting-toad",
+    uri: process.env.STEPZEN_URL || "http://localhost:5001/api/rafting-toad",
     fetchOptions:{
         mode:'no-cors',
     },

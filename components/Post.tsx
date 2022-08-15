@@ -59,7 +59,6 @@ function Post({ post }: PostProps) {
     }
     useEffect(() => {
         const votes: Vote[] = data?.getVotesUsingPost_id;
-        console.log(data);
         const vote = votes?.find(vote => vote?.username == session?.user?.name)?.upvote;
         setVoted(vote);
     }, [data])
@@ -71,7 +70,6 @@ function Post({ post }: PostProps) {
             </div>
         )
     }
-    console.log(post);
     return (
         <div className="rounded-md flex cursor-pointer border border-gray-300 bg-white shadow-sm hover:border-gray-600">
             <div className="flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 text-gray-400 p-4">
