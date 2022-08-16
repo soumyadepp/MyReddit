@@ -16,6 +16,7 @@
     "react-dom": "18.1.0",
     "react-hook-form": "^7.34.0",
     "react-hot-toast": "^2.3.0",
+    "react-search-autocomplete": "^7.2.2",
     "react-timeago": "^7.1.0",
     "stepzen": "^0.20.1"
   },

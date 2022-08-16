@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowDownIcon, ArrowUpIcon, BookmarkIcon, ShareIcon, ChatAltIcon, DotsHorizontalIcon, GiftIcon } from '@heroicons/react/outline';
+import {BookmarkIcon, ShareIcon, ChatAltIcon, DotsHorizontalIcon, GiftIcon } from '@heroicons/react/outline';
+import {ArrowDownIcon,ArrowUpIcon} from '@heroicons/react/solid';
 import Avatar from './Avatar';
 import TimeAgo from 'react-timeago';
 import Link from 'next/link';
@@ -31,10 +32,10 @@ function Post({ post }: PostProps) {
             toast("Please sign in to vote");
             return;
         }
-        if (vote === true && voted) return;
-        if (vote == false && voted === false) return;
+        if (vote && voted) return;
+        if (!vote && voted === false) return;
         try {
-            await addVote({
+            const {data:{insertVotes:newVote},} = await addVote({
                 variables: {
                     post_id: post?.id,
                     username: session?.user?.name,
@@ -73,9 +74,9 @@ function Post({ post }: PostProps) {
     return (
         <div className="rounded-md flex cursor-pointer border border-gray-300 bg-white shadow-sm hover:border-gray-600">
             <div className="flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 text-gray-400 p-4">
-                <ArrowUpIcon onClick={() => upVote(true)} className={`voteButtons hover:text-red-500 ${voted === true && 'text-blue-400'}`} />
+                <ArrowUpIcon onClick={() => upVote(true)} className={`voteButtons hover:text-red-500 ${voted && 'text-red-500'}`} />
                 <p className="text-black text-xs font-bold text-center">{displayVotes(data)}</p>
-                <ArrowDownIcon onClick={() => upVote(false)} className={`voteButtons hover:text-red-500 ${voted === false && 'text-red-400'}`} />
+                <ArrowDownIcon onClick={() => upVote(false)} className={`voteButtons hover:text-red-500 ${voted === false && 'text-blue-500'}`} />
             </div>
             <Link href={`/post/${post.id}`}>
                 <div className="p-3 pb-1">
